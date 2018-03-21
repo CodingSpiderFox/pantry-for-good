@@ -66,7 +66,7 @@ gulp.task('minify', ['build-client'], function() {
 gulp.task('watch-server', function() {
   nodemon({
     watch: ['server/**/*.js', 'common/**/*.js'],
-    exec: "node ./server/index.js"
+    exec: "node --inspect ./server/index.js"
   })
 })
 

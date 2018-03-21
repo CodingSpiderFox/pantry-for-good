@@ -59,5 +59,5 @@ module.exports = merge(common, {
       index: 'http://localhost:8080/'
     }
   },
-  devtool: 'eval'
+  devtool: 'source-map'
 })

@@ -9,7 +9,9 @@
   ],
   "env": {
     "test": {
-      "plugins": ["istanbul", "babel-plugin-rewire"]
+      "plugins": ["istanbul", "babel-plugin-rewire"],
+      "sourceMaps": true,
+      "retainLines": true
     }
   }
 }
