@@ -18,6 +18,19 @@ export const CLEAR_FLAGS = 'foodItem/CLEAR_FLAGS'
 
 export const clearFlags = () => ({type: CLEAR_FLAGS})
 
+/*
+export const registerFoodItem = (categoryId, foodItem) => ({
+  [CALL_API]: {
+    endpoint: foodItem._id ? `foods/${categoryId}/items/${foodItem._id}` : `foods/${categoryId}/items`,
+    method: foodItem._id ? 'PUT' : 'POST',
+    body: foodItem,
+    schema: foodItemSchema,
+    responseSchema: foodCategorySchema,
+    types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+  }
+})
+*/
+
 export const saveFoodItem = (categoryId, foodItem) => ({
   [CALL_API]: {
     endpoint: foodItem._id ? `foods/${categoryId}/items/${foodItem._id}` : `foods/${categoryId}/items`,

@@ -13,6 +13,7 @@ const SidebarMenu = () =>
 
     <MenuItem title="Food Schedule" path="/schedule" />
     <MenuItem title="Packing List" path="/packing" />
+    <MenuItem title="Barcode Scanning" path="/scanInventory" />
     <MenuItem title="Inventory" path="/inventory" />
 
     <MenuGroup title="Delivery" path="delivery">

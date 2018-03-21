@@ -84,11 +84,9 @@ export default {
     const item = req.body
     item.name = item.name.trim()
 
-    //Check to see if an item with the same name already exists in a category
-    let categoryWithExistingItem = await Food.findOne(
-      { items: {$elemMatch:{name: {$regex: `^${item.name}$`, $options: "i"}, deleted: false }} },
-      { 'items.$': 1 }
-    ).lean()
+    //try to find item
+    let categoryWithExistingItem = await tryFindItemByEanOrName(item);
+    
 
     if (categoryWithExistingItem) {
       const existingFoodItem = categoryWithExistingItem.items[0]
@@ -97,7 +95,25 @@ export default {
 
       const updatedCategory = await updateItemHelper(categoryWithExistingItem._id, existingFoodItem)
       res.json(updatedCategory)
-    } else {
+    }
+    //item did not exist
+    else {
+      
+      //calculate expected expire date based on existing data
+      if(item.ean != null) {
+        item.registerDate = new Date (Date.now())
+          if(item.expireDate && item.expireDate != 'Invalid date') {
+          let expireDate = new Date(Date.parse(item.expireDate))
+          var dateDiff = item.registerDate.getTime() - expireDate.getTime()
+          var seconds = dateDiff / 1000
+          seconds = Math.abs(seconds)
+          item.expireTimespan = seconds
+        }
+        else {
+          item.expireTimespan = 111
+        }
+      }
+
       const savedFood = await Food.findByIdAndUpdate(req.food._id, { $addToSet: { items: item } }, { new: true })
       res.json(savedFood)
 
@@ -155,6 +171,23 @@ export default {
     req.itemId = id
     next()
   }
+}
+
+async function tryFindItemByEanOrName(item) {
+  let categoryWithExistingItem = undefined
+  //try to find item by ean
+  if (item.ean != null) {
+      categoryWithExistingItem = await Food.findOne({ items: { 
+      ean: item.ean, deleted: false } }, 
+      { 'items.$': 1 }).lean();
+  }
+  //try to find item by name
+  if (!categoryWithExistingItem)
+    //Check to see if an item with the same name already exists in a category
+    categoryWithExistingItem = await Food.findOne({ items: { $elemMatch: {
+      name: { $regex: `^${item.name}$`, $options: "i" }, deleted: false } } },
+    { 'items.$': 1 }).lean();
+  return categoryWithExistingItem;
 }
 
 function authorizeByRole(userRoles, roles = []) {

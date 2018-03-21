@@ -21,6 +21,30 @@ const FoodItemSchema = new Schema({
     type: Number,
     default: 1
   },
+  ean: {
+    type: String,
+    default: null
+  },
+  unitNetWeightGrams: {
+    type: Number,
+    default: 0
+  },
+  kcalPer100Grams: {
+    type: Number,
+    default: 0,
+  },
+  registerDate: {
+    type: Date,
+    default: Date.now
+  },
+  expireDate: {
+    type: Date,
+    default: Date.now
+  },
+  expireTimespanSeconds: {
+    type: Number, 
+    default: 0
+  },
   deleted: {
     type: Boolean,
     default: false

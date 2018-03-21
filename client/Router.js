@@ -15,6 +15,7 @@ import Customers from './modules/customer/CustomerRouter'
 import Donors from './modules/donor/DonorRouter'
 import Drivers from './modules/driver/DriverRouter'
 import Inventory from './modules/food/components/Inventory'
+import ScanInventory from './modules/food/components/ScanInventory'
 import Schedule from './modules/food/components/Schedule'
 import Packing from './modules/food/components/Packing'
 import Settings from './modules/settings/SettingsRouter'
@@ -42,6 +43,7 @@ const Router = ({history}) =>
           <Route path="/customers" component={Customers} />
           <Route path="/donors" component={Donors} />
           <Route path="/drivers" component={Drivers} />
+          <Route path="/scanInventory" exact component={canInventory(ScanInventory)} />
           <Route path="/inventory" exact component={canInventory(Inventory)} />
           <Route path="/packing" exact component={canPack(Packing)} />
           <Route path="/schedule" exact component={canSchedule(Schedule)} />

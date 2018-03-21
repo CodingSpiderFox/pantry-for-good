@@ -86,6 +86,14 @@ describe('Food Api', function() {
         .expect(200)
     })
 
+
+    it('Register item and add item to stock sets default expire date based on existing expireTimeSpan', async function() { 
+      var expireDateFirstItem = new Date();
+      var registerDateSecondItem = new Date()
+
+    }),
+
+
     it('updates a food categories', async function() {
       const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const {app} = await createUserSession(testAdmin)
@@ -125,13 +133,16 @@ describe('Food Api', function() {
         .expect(200)
     })
 
-    it('adds food items', async function() {
+    it.only('adds food items', async function() {
       const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const {app} = await createUserSession(testAdmin)
       const request = supertest.agent(app)
 
       const testCategory = {category: 'test food'}
-      const testItem = {name: 'test item'}
+      var date = new Date(Date.now())
+      date.setTime( date.getTime() + 365 * 86400000 );
+      let dateString = date.toDateString();
+      const testItem = {name: 'test item', ean: "328932", expireDate: date.toDateString()}
 
       const savedCategory = (await request.post('/api/foods')
         .send(testCategory)).body
@@ -257,6 +268,8 @@ describe('Food Api', function() {
 
       const apple = await FoodItem.create({name: 'apple', quantity: 2, deleted: true})
       const category = await Food.create({category: 'fruits', items: [apple]})
+      
+
 
       return request.post(`/api/foods/${category._id}/items`)
         .send({ name: 'apple', quantity: 10 })
@@ -295,3 +308,4 @@ describe('Food Api', function() {
 
   })
 })
+
