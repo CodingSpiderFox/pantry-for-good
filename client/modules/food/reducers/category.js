@@ -2,7 +2,7 @@ import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
 import {get} from 'lodash'
 
-import {foodCategory, arrayOfFoodCategories} from '../../../../common/schemas'
+import {foodCategory, arrayOfFoodCategories, foodItem} from '../../../../common/schemas'
 import {CALL_API} from '../../../store/middleware/api'
 import {crudActions, crudReducer} from '../../../store/utils'
 
@@ -32,6 +32,15 @@ export const deleteFood = id => ({
     method: 'DELETE',
     schema: foodCategory,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
+  }
+})
+
+export const loadFoodByEan = () => ({
+  [CALL_API]: {
+    endpoint: `foods/ean/${food.ean}`,
+    method: 'GET',
+    schema: foodItem,
+    types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }
 })
 

@@ -23,8 +23,10 @@ export default () => {
   foodRouter.use('/foods', requiresLogin)
   foodRouter.route('/foods')
     .get(foodController.list)
-    .post(websocketMiddleware(saveCatSchema), foodController.create)
-  foodRouter.route('/foods/:foodId')
+    .post(websocketMiddleware(saveCatSchema), foodController.create)  
+  foodRouter.route('/foods/ean/:foodEan')
+    .get(foodController.readByEan)
+  foodRouter.route('/foods/:foodId')   
     .put(websocketMiddleware(saveCatSchema), foodController.update)
     .delete(websocketMiddleware(deleteCatSchema), foodController.delete)
   foodRouter.route('/foods/:foodId/items')
@@ -36,6 +38,8 @@ export default () => {
   // Finish by binding the food middleware
   foodRouter.param('foodId', foodController.foodById)
   foodRouter.param('itemId', foodController.itemById)
+  foodRouter.param('foodEan', foodController.foodByEan)
+
 
   return foodRouter
 }

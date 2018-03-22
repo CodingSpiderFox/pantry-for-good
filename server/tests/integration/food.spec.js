@@ -133,7 +133,31 @@ describe('Food Api', function() {
         .expect(200)
     })
 
-    it.only('adds food items', async function() {
+    it('gets foodItem by ean', async function() {
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
+      const {app} = await createUserSession(testAdmin)
+      const request = supertest.agent(app)
+
+      const ean = "123"
+
+      const testCategory = {category: 'test food'}
+      const testItem = {name: 'test item', ean: ean}
+
+      const savedCategory = (await request.post('/api/foods')
+        .send(testCategory)).body
+
+      return request.post(`/api/foods/${savedCategory._id}/items`)
+        .send(testItem)
+
+      return request.get(`/api/foods/ean/${ean}`)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+        })
+        .expect(200)
+    })
+
+
+    it('adds food items', async function() {
       const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const {app} = await createUserSession(testAdmin)
       const request = supertest.agent(app)
@@ -158,6 +182,7 @@ describe('Food Api', function() {
         })
         .expect(200)
     })
+
 
     it('updates food items', async function() {
       const testAdmin = createTestUser('admin', ADMIN_ROLE)

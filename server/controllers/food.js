@@ -32,6 +32,27 @@ export default {
   },
 
   /**
+   * Food middleware
+   */
+  async foodByEan(req, res, next, id) {
+    const food = await Food.findOne({ items: { 
+      ean: id, deleted: false } }, 
+      { 'items.$': 1 }).lean();
+
+    if (!food) throw new NotFoundError
+
+    req.food = food
+    next()
+  },
+
+  /**
+   * Get food by ean
+   */
+  async readByEan(req, res) {
+    res.json(req.food)
+  },
+
+  /**
    * Update a Food category
    */
   async update(req, res) {
@@ -44,7 +65,7 @@ export default {
   },
 
   /**
-   * Delete a Food category
+   * Delete a Food category 
    */
   async delete(req, res) {
     authorizeByRole(req.user.roles, [INVENTORY])

@@ -75,6 +75,13 @@ export default class RegisterFoodForm extends React.Component {
   }
 
   /**
+   * looks up whether the items already is registered
+   */
+  lookupEan = {
+    
+  }
+
+  /**
    * functions to handle any changes of user input fields in the register form
    */
   handleChange = {
@@ -160,6 +167,7 @@ export default class RegisterFoodForm extends React.Component {
                 value={this.state.formInputFields.ean}
                 placeholder="EAN"
                 onChange={this.handleChange.ean}
+                onBlur={this.lookupEan}
                 inputRef={ref => { this.eanFormControl = ref }}
                 ref={(c)=>this.formControlRef=c}
               />
