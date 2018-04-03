@@ -3,6 +3,7 @@ const {resolve} = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
+  context: resolve(__dirname), // add this
   entry: {
     vendor: ['react-hot-loader/patch',
       'admin-lte', 'bootstrap', 'history', 'lodash', 'moment', 'moment-recur',
