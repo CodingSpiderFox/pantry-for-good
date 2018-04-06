@@ -5,7 +5,7 @@ import { BootstrapTable, TableHeaderColumn, SizePerPageDropDown } from 'react-bo
 import _ from 'lodash'
 
 import selectors from '../../../../store/selectors'
-import { saveFoodItem, deleteFoodItem, clearFlags } from '../../reducers/item'
+import { saveFoodItem, deleteFoodItem, clearFlags, lookupEan } from '../../reducers/item'
 import { Box, BoxBody } from '../../../../components/box'
 import { showConfirmDialog, hideDialog } from '../../../core/reducers/dialog'
 import FoodAddEditForm from './FoodAddEditForm'

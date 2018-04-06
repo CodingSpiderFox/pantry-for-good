@@ -1,12 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
 import { Button, FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
 import Autosuggest from 'react-bootstrap-autosuggest'
 import DatePicker from 'react-bootstrap-date-picker'
 
-import { Box, BoxHeader, BoxBody } from '../../../../components/box'
 
-export default class RegisterFoodForm extends React.Component {
+import selectors from '../../../../store/selectors'
+import { Box, BoxHeader, BoxBody } from '../../../../components/box'
+import { saveFoodItem, lookupEan } from '../../reducers/item'
+
+export class RegisterFoodForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -72,13 +76,6 @@ export default class RegisterFoodForm extends React.Component {
     return Object.keys(this.state.formInputFields).map(key =>
       initialformInputFields[key] !== this.state.formInputFields[key]
     ).reduce((acc, x) => acc || x, false)
-  }
-
-  /**
-   * looks up whether the items already is registered
-   */
-  lookupEan = {
-    
   }
 
   /**
@@ -167,7 +164,7 @@ export default class RegisterFoodForm extends React.Component {
                 value={this.state.formInputFields.ean}
                 placeholder="EAN"
                 onChange={this.handleChange.ean}
-                onBlur={this.lookupEan}
+                onBlur={this.props.lookupEan}
                 inputRef={ref => { this.eanFormControl = ref }}
                 ref={(c)=>this.formControlRef=c}
               />
@@ -237,3 +234,24 @@ export default class RegisterFoodForm extends React.Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  // Add a nameLowerCased property with the name in lower case to use for sorting in autosuggest
+  foodItems: selectors.food.item.getAll(state).map(item =>
+    ({ ...item, nameLowerCased: item.name.toLowerCase() })),
+  foodCategories: selectors.food.category.getAll(state),
+  loading: selectors.food.category.loading(state),
+  loadError: selectors.food.category.loadError(state),
+  saving: selectors.food.item.saving(state),
+  saveError: selectors.food.item.saveError(state),
+})
+
+const mapDispatchToProps = dispatch => ({
+  lookupEan: (ean) => dispatch(lookupEan(this.state.formInputFields.ean)),
+  saveFoodItem: (categoryId, foodItem) => dispatch(saveFoodItem(categoryId, foodItem)),
+  hideDialog: () => dispatch(hideDialog()),
+  showConfirmDialog: (cancel, confirm, message, label) =>
+    dispatch(showConfirmDialog(cancel, confirm, message, label)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterFoodForm)

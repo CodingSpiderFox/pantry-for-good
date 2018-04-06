@@ -50,6 +50,14 @@ export const deleteFoodItem = (categoryId, foodItemId) => ({
   }
 })
 
+export const lookupEan = (ean) => ({
+  [CALL_API]: {
+    endpoint: `foods/ean/${ean}`,
+    method: 'GET',
+    types: [ actions.LOAD_ONE_REQUEST, actions.LOAD_ONE_SUCCESS, actions.LOAD_ONE_FAILURE]
+  }
+})
+
 export default (state = {
   ids: []
 }, action) => {
