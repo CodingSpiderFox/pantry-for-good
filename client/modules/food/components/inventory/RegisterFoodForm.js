@@ -17,13 +17,14 @@ export class RegisterFoodForm extends React.Component {
       formInputFields: {
         ean: this.props.registerFood ? this.props.registerFood.ean : "",
         name: this.props.registerFood ? this.props.registerFood.name : "",
+        categoryId: this.props.registerFood ? this.props.registerFood.categoryId : "",
         unitNetWeightGrams: this.props.registerFood ? this.props.registerFood.unitNetWeightGrams : "",
         kcalPer100g: this.props.registerFood ? this.props.registerFood.kcalPer100g : "",
         expireDate: this.props.registerFood ? this.props.registerFood.expireDate : "",
       },
       validInput: false,
       //touched input fields
-      touched: { ean: false, foodName: false, unitNetWeightGrams: false, kcalPer100g: false, expireDate: false },
+      touched: { ean: false, foodName: false, categoryId: false, unitNetWeightGrams: false, kcalPer100g: false, expireDate: false },
     }
   }
 
@@ -40,6 +41,8 @@ export class RegisterFoodForm extends React.Component {
       !this.state.touched.foodName || this.state.formInputFields.name.trim().length ? null : 'error',
     ean: () =>
       !this.state.touched.ean || this.state.formInputFields.ean.trim().length ? null : 'error',
+    categoryId: () =>
+      !this.state.touched.foodName || this.state.formInputFields.name.trim().length ? null : 'error',
     unitNetWeight: () =>
       !this.state.touched.unitNetWeight || (this.state.formInputFields.unitNetWeightGrams !== "" && this.state.formInputFields.unitNetWeightGrams >= 0) ? null : 'error',
     kcalPer100g: () =>
@@ -48,8 +51,9 @@ export class RegisterFoodForm extends React.Component {
       !this.state.touched.expireDate || (this.state.formInputFields.expireDate !== "") ? null : 'error',
     // This returns true or false if all fields are valid
     all: () =>
-      this.state.formInputFields.name.trim().length > 0 &&
       this.state.formInputFields.ean !== "" &&
+      this.state.formInputFields.name.trim().length > 0 &&
+      this.state.formInputFields.categoryId !== "" &&
       this.state.formInputFields.unitNetWeightGrams >= 0 &&
       this.state.formInputFields.kcalPer100g >= 0 &&
       this.state.formInputFields.expireDate !== ""
@@ -67,8 +71,9 @@ export class RegisterFoodForm extends React.Component {
    */
   checkChanged = () => {
     const initialformInputFields = {
-      name: this.props.registerFood ? this.props.registerFood.name : "",
       name: this.props.registerFood ? this.props.registerFood.ean : "",
+      name: this.props.registerFood ? this.props.registerFood.name : "",
+      name: this.props.registerFood ? this.props.registerFood.categoryId : "",
       name: this.props.registerFood ? this.props.registerFood.unitNetWeightGrams : "",
       name: this.props.registerFood ? this.props.registerFood.kcalPer100g : "",
       name: this.props.registerFood ? this.props.registerFood.expireDate : "",
@@ -104,6 +109,11 @@ export class RegisterFoodForm extends React.Component {
         }, this.validate)
       }
     },
+    categoryId: e =>
+      this.setState({
+        formInputFields: { ...this.state.formInputFields, categoryId: e.target.value },
+        touched: { ...this.state.touched, categoryId: true }
+      }, this.validate),
     ean: e =>
       this.setState({
         formInputFields: { ...this.state.formInputFields, ean: e.target.value },
@@ -129,10 +139,11 @@ export class RegisterFoodForm extends React.Component {
   registerFood = () => {
     if (this.props.formType === 'Register') {
       this.props.saveFoodItem(
-        this.state.formInputFields.ean,
+        this.state.formInputFields.categoryId,
         {
           name: this.state.formInputFields.name,
           ean: this.state.formInputFields.ean,
+          categoryId: this.state.formInputFields.categoryId,
           unitNetWeightGrams: this.state.formInputFields.unitNetWeightGrams,
           kcalPer100g: this.state.formInputFields.kcalPer100g,
           expireDate: this.state.formInputFields.expireDate
@@ -156,7 +167,7 @@ export class RegisterFoodForm extends React.Component {
           errorBottom={true}>
           <form>
 
-            <FormGroup controlId="ean" validationState={this.getValidationState.ean()} >
+            <FormGroup controlId="ean" validationState={this.getValidationState.ean()} > 
               <ControlLabel>EAN</ControlLabel>
               <FormControl
                 type="number"
@@ -181,6 +192,21 @@ export class RegisterFoodForm extends React.Component {
                 itemSortKeyPropName='nameLowerCased'
                 onSelect={this.handleChange.foodName}
               />
+            </FormGroup>
+            
+            <FormGroup controlId="categoryId" validationState={this.getValidationState.categoryId()}>
+              <ControlLabel>Category</ControlLabel>
+              <FormControl componentClass="select" placeholder="select category"
+                onChange={this.handleChange.categoryId}
+                value={this.state.formInputFields.categoryId}
+              >
+                {(this.props.formType === 'Register') &&
+                  <option value="">Select Category</option>
+                }
+                {this.props.foodCategories.map(category =>
+                  <option key={category._id} value={category._id}>{category.category}</option>
+                )}
+              </FormControl>
             </FormGroup>
 
             <FormGroup controlId="unitNetWeight" validationState={this.getValidationState.unitNetWeight()} >
@@ -222,7 +248,7 @@ export class RegisterFoodForm extends React.Component {
           </form>
           <div className="pull-right btn-toolbar">
             <Button className={this.state.validInput && 'btn-success'}
-              onClick={this.props.registerFood}>Add</Button>
+              onClick={this.registerFood}>Add</Button>
             <Button className={this.state.validInput && 'btn-success'}
               onClick={this.registerFood}
               disabled={!this.state.validInput || this.props.saving}>
@@ -247,7 +273,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  lookupEan: (ean) => dispatch(lookupEan(this.state.formInputFields.ean)),
+  lookupEan: (ean) => dispatch(lookupEan(ean)),
   saveFoodItem: (categoryId, foodItem) => dispatch(saveFoodItem(categoryId, foodItem)),
   hideDialog: () => dispatch(hideDialog()),
   showConfirmDialog: (cancel, confirm, message, label) =>

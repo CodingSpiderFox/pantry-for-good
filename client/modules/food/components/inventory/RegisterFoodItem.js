@@ -23,13 +23,12 @@ export class RegisterItem extends React.Component {
   }
 
   /**
-   * Show the modal to add or edit a food.  If _id is provided the modal shows the form
-   * to edit that food.  Otherwise it shows the form to add a new food.
+   * Show the modal to register a food. 
    */
-  openModal = _id => () => {
-      // Open the modal in 'add' mode
+  openModal = mode => () => {
+      // Open the modal in 'register' mode
       this.setState({
-        modalType: 'Add',
+        modalType: mode,
         registerModalFood: undefined
       })
     this.props.clearFlags()
@@ -116,7 +115,9 @@ export class RegisterItem extends React.Component {
     }
     return (
       <Box>
-        <Button onClick={this.openModal()} className='btn-success' style={{ color: 'white', width: '10em', margin: 'auto', padding: '50px', fontSize: '300%', marginBottom: '20px' }}>Register item</Button>
+        <Button onClick={this.openModal("Register")}
+                className='btn-success'
+                style={{ color: 'white', width: '10em', margin: 'auto', padding: '50px', fontSize: '300%', marginBottom: '20px' }}>Register item</Button>
         <br />
         <Modal show={!!this.state.modalType} onHide={this.closeModal}>
           <RegisterFoodForm
