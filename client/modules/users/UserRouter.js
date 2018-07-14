@@ -16,12 +16,21 @@ import requireRole from '../../components/router/requireRole'
 import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
 import userOrRedirect from '../../components/router/userOrRedirect'
 
+import Notifications from './components/Notifications'
+
 import './css/users.css'
 
 const IsAdmin = requireRole([ADMIN_ROLE])
+const guestOrRedirectSignIn = guestOrRedirect(SignIn)
+const guestOrRedirectSignUp = guestOrRedirect(SignUp)
 
 const UserRouter = ({match}) =>
   <SwitchWithNotFound>
+    <Route
+      path={`${match.url}/notifications`}
+      exact
+      component={Notifications}
+    />
     <Route
       path={`${match.url}/list`}
       exact
@@ -52,8 +61,8 @@ const UserRouter = ({match}) =>
       exact
       component={ResetPassword}
     />
-    <Route path={`${match.url}/signin`} exact component={guestOrRedirect(SignIn)} />
-    <Route path={`${match.url}/signup`} exact component={guestOrRedirect(SignUp)} />
+    <Route path={`${match.url}/signin`} exact component={guestOrRedirectSignIn} />
+    <Route path={`${match.url}/signup`} exact component={guestOrRedirectSignUp} />
     <Route
       path={`${match.url}/confirm-new-google-account`}
       exact
