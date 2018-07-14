@@ -13,7 +13,7 @@ const PackageSchema = new Schema({
   status: {
     type: String,
     required: true,
-    enum: ['Packed', 'Received'],
+    enum: ['Packed', 'Delivered'],
   },
   packedBy: {
     type: Number,
@@ -35,7 +35,7 @@ const PackageSchema = new Schema({
 })
 
 function arrayMinElements(val) {
-  return val.length > 0;
+  return val.length > 0
 }
 
 export default mongoose.model(modelTypes.PACKAGE, PackageSchema)
